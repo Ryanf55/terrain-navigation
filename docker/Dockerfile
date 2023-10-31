@@ -42,3 +42,15 @@ RUN apt-get update \
     && source /opt/ros/noetic/setup.bash \
     && rosdep install --from-paths src --ignore-src -y \
     && rm -rf /var/lib/apt/lists/*
+
+FROM ros:noetic-ros-core-focal as px4
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        git
+
+# Use a depth 1 to speed up the build
+RUN git clone --recurse-submodules --depth 1 https://github.com/ethz-asl/ethzasl_fw_px4.git 
+RUN ls
+RUN ./ethzasl_fw_px4/Tools/setup/ubuntu.sh
+
