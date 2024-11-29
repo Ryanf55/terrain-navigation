@@ -74,6 +74,11 @@ int main(int argc, char** argv) {
   nh_private.param<std::string>("output_directory", output_file_dir, "");
   nh_private.param<int>("number_of_runs", number_of_runs, 10);
 
+  std::string output_file_path = output_file_dir + "/" + location + "_goal_benchmark.csv";
+  if (!benchmark->prepareResultsFile(output_file_path)) {
+    return -1;
+  }
+
   // Load terrain map from defined tif paths
   auto terrain_map = std::make_shared<TerrainMap>();
   terrain_map->initializeFromGeotiff(map_path, false);

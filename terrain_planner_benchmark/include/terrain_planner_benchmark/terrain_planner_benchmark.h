@@ -19,6 +19,8 @@ class TerrainPlannerBenchmark {
  public:
   TerrainPlannerBenchmark();
   ~TerrainPlannerBenchmark();
+  // Call this BEFORE running the benchmark to ensure results can be written.
+  [[nodiscard]] bool prepareResultsFile(const std::string& file_path);
   void runBenchmark(const int num_experiments);
   void setMap(std::shared_ptr<TerrainMap> map) { map_ = std::move(map); };
   void writeResultstoFile(const std::string& file_path);

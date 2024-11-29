@@ -1,7 +1,10 @@
 
+#include <filesystem>
+
 #include "terrain_planner_benchmark/terrain_planner_benchmark.h"
 
 #include "terrain_planner/terrain_ompl_rrt.h"
+
 
 TerrainPlannerBenchmark::TerrainPlannerBenchmark() {
   data_logger = std::make_shared<DataLogger>();
@@ -78,6 +81,28 @@ void TerrainPlannerBenchmark::runBenchmark(const int num_experiments) {
       result.path_length = solution_path_length;
       results.push_back(result);
     }
+  }
+}
+
+bool TerrainPlannerBenchmark::prepareResultsFile(const std::string& file_path) {
+  namespace fs = std::filesystem;
+  fs::path fs_path(file_path);
+  try {
+    // Extract the directory portion of the file path
+    fs::path dir_path = fs_path.parent_path();
+
+    // Check if the directory exists
+    if (!dir_path.empty() && !fs::exists(dir_path)) {
+      // Create the directory and any necessary parent directories
+      if (!fs::create_directories(dir_path)) {
+        std::cerr << "prepareResultsFile: Failed to create directory: " << dir_path << std::endl;
+        return false;
+      }
+    }
+    return true;
+  } catch (const std::filesystem::filesystem_error& e) {
+    std::cerr << "prepareResultsFile: Filesystem error: " << e.what() << std::endl;
+    return false;
   }
 }
 
